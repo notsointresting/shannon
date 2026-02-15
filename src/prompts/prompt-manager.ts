@@ -30,9 +30,11 @@ let loginInstructionsTemplateCache: string | null = null;
 // Pure function: Build complete login instructions from config
 async function buildLoginInstructions(authentication: Authentication): Promise<string> {
   try {
-    let fullTemplate = loginInstructionsTemplateCache;
+    let fullTemplate: string;
 
-    if (!fullTemplate) {
+    if (loginInstructionsTemplateCache) {
+      fullTemplate = loginInstructionsTemplateCache;
+    } else {
       // Load the login instructions template
       const loginInstructionsPath = path.join(import.meta.dirname, '..', '..', 'prompts', 'shared', 'login-instructions.txt');
 

@@ -35,7 +35,7 @@ export function base32Decode(encoded: string): Buffer {
 
   for (let i = 0; i < cleanInput.length; i++) {
     const charCode = cleanInput.charCodeAt(i);
-    const index = charCode < RFC4648_LOOKUP.length ? RFC4648_LOOKUP[charCode] : -1;
+    const index = (charCode < RFC4648_LOOKUP.length ? RFC4648_LOOKUP[charCode] : -1) ?? -1;
 
     if (index === -1) {
       // Use charAt to safely get the character for the error message
