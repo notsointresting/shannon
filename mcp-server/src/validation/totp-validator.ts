@@ -11,12 +11,18 @@
  * Ported from tools/generate-totp-standalone.mjs (lines 43-72).
  */
 
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+const RFC4648_LOOKUP = new Int8Array(91).fill(-1);
+for (let i = 0; i < ALPHABET.length; i++) {
+  const charCode = ALPHABET.charCodeAt(i);
+  RFC4648_LOOKUP[charCode] = i;
+}
+
 /**
  * Base32 decode function
  * Ported from generate-totp-standalone.mjs
  */
 export function base32Decode(encoded: string): Buffer {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
   const cleanInput = encoded.toUpperCase().replace(/[^A-Z2-7]/g, '');
 
   if (cleanInput.length === 0) {
@@ -27,10 +33,13 @@ export function base32Decode(encoded: string): Buffer {
   let bits = 0;
   let value = 0;
 
-  for (const char of cleanInput) {
-    const index = alphabet.indexOf(char);
+  for (let i = 0; i < cleanInput.length; i++) {
+    const charCode = cleanInput.charCodeAt(i);
+    const index = charCode < RFC4648_LOOKUP.length ? RFC4648_LOOKUP[charCode] : -1;
+
     if (index === -1) {
-      throw new Error(`Invalid base32 character: ${char}`);
+      // Use charAt to safely get the character for the error message
+      throw new Error(`Invalid base32 character: ${cleanInput.charAt(i)}`);
     }
 
     value = (value << 5) | index;
@@ -39,6 +48,7 @@ export function base32Decode(encoded: string): Buffer {
     if (bits >= 8) {
       output.push((value >>> (bits - 8)) & 255);
       bits -= 8;
+      value &= (1 << bits) - 1; // Keep only remaining bits to avoid overflow
     }
   }
 
