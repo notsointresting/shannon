@@ -106,7 +106,7 @@ Shannon is available in two editions:
 - **AI Provider Credentials** (choose one):
   - **Anthropic API key** (recommended) - Get from [Anthropic Console](https://console.anthropic.com)
   - **Claude Code OAuth token**
-  - **[EXPERIMENTAL - UNSUPPORTED] Alternative providers via Router Mode** - OpenAI or Google Gemini via OpenRouter (see [Router Mode](#experimental---unsupported-router-mode-alternative-providers))
+  - **[EXPERIMENTAL - UNSUPPORTED] Alternative providers via Router Mode** - OpenAI, Zhipu AI (GLM), or Google Gemini via OpenRouter (see [Router Mode](#experimental---unsupported-router-mode-alternative-providers))
 
 ### Quick Start
 
@@ -274,6 +274,8 @@ Shannon can experimentally route requests through alternative AI providers using
 OPENAI_API_KEY=sk-...
 # OR
 OPENROUTER_API_KEY=sk-or-...
+# OR
+ZAI_API_KEY=...
 
 # Set default model:
 ROUTER_DEFAULT=openai,gpt-5.2  # provider,model format
@@ -291,6 +293,7 @@ ROUTER_DEFAULT=openai,gpt-5.2  # provider,model format
 |----------|--------|
 | OpenAI | gpt-5.2, gpt-5-mini |
 | OpenRouter | google/gemini-3-flash-preview |
+| Zhipu AI (ZAI) | zai/glm-4.7-flash, zai/glm-4.5-flash, zai/glm-4.6v-flash |
 
 #### Disclaimer
 

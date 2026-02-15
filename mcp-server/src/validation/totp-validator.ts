@@ -28,12 +28,12 @@ export function base32Decode(encoded: string): Buffer {
   let value = 0;
 
   for (const char of cleanInput) {
-    const index = alphabet.indexOf(char);
-    if (index === -1) {
+    const idx = alphabet.indexOf(char);
+    if (idx === -1) {
       throw new Error(`Invalid base32 character: ${char}`);
     }
 
-    value = (value << 5) | index;
+    value = (value << 5) | idx;
     bits += 5;
 
     if (bits >= 8) {
