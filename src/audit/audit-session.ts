@@ -97,13 +97,19 @@ export class AuditSession {
   async startAgent(
     agentName: string,
     promptContent: string,
-    attemptNumber: number = 1
+    attemptNumber: number = 1,
+    redactionList: string[] = []
   ): Promise<void> {
     await this.ensureInitialized();
 
     // Save prompt snapshot (only on first attempt)
     if (attemptNumber === 1) {
-      await AgentLogger.savePrompt(this.sessionMetadata, agentName, promptContent);
+      await AgentLogger.savePrompt(
+        this.sessionMetadata,
+        agentName,
+        promptContent,
+        redactionList
+      );
     }
 
     // Track current agent name for workflow logging

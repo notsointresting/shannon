@@ -72,7 +72,22 @@ export const parseConfig = async (configPath: string): Promise<Config> => {
     }
 
     // Read file content
-    const configContent = await fs.readFile(configPath, 'utf8');
+    let configContent = await fs.readFile(configPath, 'utf8');
+
+    // Substitute environment variables in the configuration file
+    // Syntax: ${VAR_NAME}
+    configContent = configContent.replace(/\$\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g, (_: string, varName: string) => {
+      // Use environment variable if it exists
+      if (process.env[varName] !== undefined) {
+        return process.env[varName]!;
+      } else {
+        // If not found, log warning and use empty string (similar to dotenv behavior)
+        console.warn(
+          `⚠️  Warning: Environment variable '${varName}' not found in configuration substitution. Using empty string.`
+        );
+        return '';
+      }
+    });
 
     // Basic content validation
     if (!configContent.trim()) {
