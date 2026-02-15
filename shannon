@@ -155,10 +155,8 @@ cmd_start() {
       ;;
     *)
       if [ ! -d "./repos/$REPO" ]; then
-        echo "ERROR: Repository not found at ./repos/$REPO"
-        echo ""
-        echo "Place your target repository under the ./repos/ directory"
-        exit 1
+        echo "Repository not found at ./repos/$REPO. Creating empty directory for blackbox testing..."
+        mkdir -p "./repos/$REPO"
       fi
       CONTAINER_REPO="/repos/$REPO"
       ;;
