@@ -146,7 +146,8 @@ export class AgentLogger {
   static async savePrompt(
     sessionMetadata: SessionMetadata,
     agentName: string,
-    promptContent: string
+    promptContent: string,
+    redactionList: string[] = []
   ): Promise<void> {
     const promptPath = generatePromptPath(sessionMetadata, agentName);
 
@@ -162,7 +163,16 @@ export class AgentLogger {
       ``,
     ].join('\n');
 
-    const fullContent = header + promptContent;
+    // Redact secrets
+    let contentToSave = promptContent;
+    for (const secret of redactionList) {
+      if (secret && secret.length > 0) {
+        // Global replace of the secret
+        contentToSave = contentToSave.split(secret).join('[REDACTED]');
+      }
+    }
+
+    const fullContent = header + contentToSave;
 
     // Use atomic write for safety
     await atomicWrite(promptPath, fullContent);

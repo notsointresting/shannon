@@ -164,7 +164,16 @@ async function runAgentActivity(
 
     // 5. Create git checkpoint before execution
     await createGitCheckpoint(repoPath, agentName, attemptNumber);
-    await auditSession.startAgent(agentName, prompt, attemptNumber);
+
+    // Collect secrets for redaction in logs
+    const redactionList: string[] = [];
+    if (distributedConfig?.authentication?.credentials) {
+      const creds = distributedConfig.authentication.credentials;
+      if (creds.password) redactionList.push(creds.password);
+      if (creds.totp_secret) redactionList.push(creds.totp_secret);
+    }
+
+    await auditSession.startAgent(agentName, prompt, attemptNumber, redactionList);
 
     // 6. Execute agent (single attempt - Temporal handles retries)
     const result: ClaudePromptResult = await runClaudePrompt(
